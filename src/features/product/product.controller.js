@@ -20,7 +20,8 @@ export default class ProductController{
   rateProduct(req,res){
      const UserId=req.query.UserId;
      const ProductId=req.query.ProductId;
-     const ratings=req.body.rating;
+     const ratings=req.query.rating;
+    
      const error=ProductModel.rateProduct(UserId,ProductId,ratings);
      if(error){
       res.status(400).send(error);

@@ -1,16 +1,24 @@
 import UserModel from './user.model.js';
 import jwt from 'jsonwebtoken';
+import UserRepository from './user.repository.js';
 
 export default class UserController{
-    signUp(req,res){
+
+    constructor(){
+        this.userRepository=new UserRepository();
+    }
+
+
+   async signUp(req,res){
         const{name,email,password,type}=req.body;
-        const user=UserModel.signUp(name,email,password,type);
+        const newUser=new UserModel(name,email,password,type);
+        const user= await this.userRepository.signUp(newUser);
         res.status(201).send(user);
     }
-    signIn(req,res){
+  async signIn(req,res){
         console.log(req.body);
         const {email,password}=req.body;
-        const user=UserModel.signIn(email,password);
+        const user=await this.userRepository.signIn(email,password);
         if(!user){
             return res.status(401).send("Incorrect Credentials");
         }

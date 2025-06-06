@@ -31,32 +31,37 @@ export default class ProductModel {
     }
     static rateProduct(UserId, ProductId, rating) {
         // 1. Validate user
-        const user = user.find(u => u.id == UserId);
-        if (!user) {
+        const founduser = user.find(u => u.id == UserId);
+        if (!founduser) {
             return "User not found";
         }
         // 2. Validate product
-        const product = products.find(p => p.id == ProductId);
+        const product = products.find(p => p.id === Number(ProductId));
         if (!product) {
             return "Product not found";
         }
         // 3. Add or update rating
         if (!product.ratings) {
             product.ratings = [];
-        }
-        const existingRatingIndex = product.ratings.findIndex(r => r.UserId == UserId);
-         if (existingRatingIndex >= 0) {
-            product.ratings[existingRatingIndex] = {
-                UserId: UserId,
-                rating: rating
-            };
+           product.ratings.push({
+            UserId:UserId,
+            rating:rating
+           })
+        
         }else {
-            product.ratings.push({
-                UserId: UserId,
-                rating: rating
-            });
+            
+            const existingRating=product.ratings.find(r=>r.UserId==UserId);
+            if(existingRating){
+                existingRating.rating=rating;
+            }
+            else{
+                product.ratings.push({
+                    UserId:UserId,
+                    rating:rating
+                })
+            }
         }
-        return product;
+        
     }
 }
 
